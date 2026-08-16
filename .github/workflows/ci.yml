@@ -48,11 +48,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --ignore-scripts
 
-      - name: Compile src → lib
+      - name: Compile src to lib
         run: pnpm exec tsc -p tsconfig.json
 
       - name: Verify entry exports apply()
-        run: node --input-type=module -e "const m = await import('./lib/index.js'); if (typeof m.apply !== 'function') throw new Error('missing apply()'); console.log('OK:', m.name)"
+        run: |
+          node --input-type=module -e "const m = await import('./lib/index.js'); if (typeof m.apply !== 'function') throw new Error('missing apply()'); console.log('OK:', m.name)"
 
       - name: Smoke-run audit engine on self
-        run: node --input-type=module -e "const { auditDeep } = await import('./lib/deepaudit.js'); const r = await auditDeep({ dir: '.', house: true, smokeTimeoutMs: 20000 }); console.log('deep self-audit:', r.verdict, '- host deps ok, sandbox ok');"
+        run: |
+          node --input-type=module -e "const { auditDeep } = await import('./lib/deepaudit.js'); const r = await auditDeep({ dir: '.', house: true, smokeTimeoutMs: 20000 }); console.log('deep self-audit:', r.verdict, '- host deps ok, sandbox ok');"
