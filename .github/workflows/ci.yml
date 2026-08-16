@@ -49,10 +49,19 @@ jobs:
             --external:node:* --external:@deepseek-ai/* --external:cordis --external:schemastery \
             --external:acorn --external:acorn-walk \
             --outfile=lib/index.js
+          npx esbuild src/deepaudit.ts --bundle --format=esm --platform=node \
+            --external:node:* --external:acorn --external:acorn-walk \
+            --outfile=lib/deepaudit.js
           echo "build OK"
 
       - name: Verify entry exports apply()
         run: |
+          npm i --no-save --legacy-peer-deps --ignore-scripts --no-audit --no-fund schemastery@3.18.0
+          mkdir -p node_modules/@deepseek-ai/dsh-tools node_modules/@deepseek-ai/cordis-plugin-loader
+          echo '{"name":"@deepseek-ai/dsh-tools","version":"0.0.0","main":"index.js"}' > node_modules/@deepseek-ai/dsh-tools/package.json
+          echo 'export const defineTool = (t) => t' > node_modules/@deepseek-ai/dsh-tools/index.js
+          echo '{"name":"@deepseek-ai/cordis-plugin-loader","version":"0.0.0","main":"index.js"}' > node_modules/@deepseek-ai/cordis-plugin-loader/package.json
+          echo 'export {}' > node_modules/@deepseek-ai/cordis-plugin-loader/index.js
           node --input-type=module -e "const m = await import('./lib/index.js'); if (typeof m.apply !== 'function') throw new Error('missing apply()'); console.log('OK:', m.name)"
 
       - name: Smoke-run audit engine on self
