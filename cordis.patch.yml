@@ -1,0 +1,10 @@
+# dsh-plugin-auditor — overlay patches.
+#
+# This bundle injects only into `tools` + `loader` (all behavior lives in
+# `lib/index.js`), so no host-side loader entries to insert here.
+# harness still requires this patch file to exist (see `dsh.bundle.patch`
+# in package.json) and the top level MUST be a YAML array — `parsePatchList`
+# rejects object/mapping roots. Keep the empty array unless you add a real
+# loader entry override.
+
+[]
