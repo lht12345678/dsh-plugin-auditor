@@ -3,6 +3,7 @@
   "version": "0.2.0",
   "description": "DSH 插件审计官：审查 / 门禁 / 兼容扫描 / 崩溃保险丝 + 深度安全审查（AST 语义 + 依赖漏洞库 + 行为沙箱）",
   "private": true,
+  "packageManager": "pnpm@11.9.0",
   "type": "module",
   "main": "./lib/index.js",
   "types": "./lib/types/index.d.ts",

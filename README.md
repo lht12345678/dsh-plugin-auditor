@@ -1,5 +1,9 @@
 # @dsh-external/dsh-plugin-auditor — 插件审计官
 
+[![CI](https://github.com/lht12345678/dsh-plugin-auditor/actions/workflows/ci.yml/badge.svg)](https://github.com/lht12345678/dsh-plugin-auditor/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Version](https://img.shields.io/github/v/release/lht12345678/dsh-plugin-auditor)](https://github.com/lht12345678/dsh-plugin-auditor/releases)
+
 > 为 [DeepSeek Harness (DSH)](https://github.com/deepseek-ai/deepseek-harness) 打造的插件
 > 「审计官 + 门卫 + 保险丝」三合一。任何插件（外来或自研）**必须先过它这关才能安装**：
 
@@ -142,6 +146,10 @@ npm run typecheck
 - 冒烟加载在子进程执行，顶层副作用不波及 harness 本身
 - `dsh plugin add` CLI 直装未过审插件时，守卫会在**下次启动**的基线比对中拦截并禁用
 - 深度沙箱是「检测」而非「遏制」（详见上文）
+
+## 变更记录
+
+版本历史见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 许可
 
