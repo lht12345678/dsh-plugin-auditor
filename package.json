@@ -20,11 +20,13 @@
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
+    "esbuild": "^0.25.0",
     "typescript": "^5.9.0"
   },
   "scripts": {
     "build": "bash scripts/build.sh",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "check:syntax": "esbuild src/index.ts --bundle --format=esm --platform=node --external:node:* --external:@deepseek-ai/* --external:cordis --external:schemastery --external:acorn --external:acorn-walk --outfile=/tmp/auditor-check.mjs"
   },
   "dsh": {
     "bundle": {

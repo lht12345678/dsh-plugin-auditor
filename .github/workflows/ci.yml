@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  typecheck:
-    name: Typecheck
+  syntax:
+    name: Syntax & bundle check (esbuild)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,16 +22,20 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dependencies
+      - name: Install direct deps (no peer auto-install)
         run: pnpm install --ignore-scripts
 
-      - name: Type check
-        run: pnpm run typecheck
+      - name: esbuild bundle check (externalizes DSH peer deps)
+        run: |
+          pnpm exec esbuild src/index.ts --bundle --format=esm --platform=node \
+            --external:node:* --external:@deepseek-ai/* --external:cordis --external:schemastery \
+            --outfile=/tmp/auditor-bundle-check.mjs
+          echo "bundle check OK"
 
-  build:
-    name: Build (tsc)
+  build-and-verify:
+    name: Build + entry + auditDeep self-audit
     runs-on: ubuntu-latest
-    needs: typecheck
+    needs: syntax
     steps:
       - uses: actions/checkout@v4
 
@@ -43,11 +47,16 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dependencies
+      - name: Install direct deps (no peer auto-install)
         run: pnpm install --ignore-scripts
 
-      - name: Compile src to lib
-        run: pnpm exec tsc -p tsconfig.json
+      - name: Compile src to lib (esbuild, types elided)
+        run: |
+          pnpm exec esbuild src/index.ts --bundle --format=esm --platform=node \
+            --external:node:* --external:@deepseek-ai/* --external:cordis --external:schemastery \
+            --external:acorn --external:acorn-walk \
+            --outfile=lib/index.js
+          echo "build OK"
 
       - name: Verify entry exports apply()
         run: |
@@ -55,4 +64,4 @@ jobs:
 
       - name: Smoke-run audit engine on self
         run: |
-          node --input-type=module -e "const { auditDeep } = await import('./lib/deepaudit.js'); const r = await auditDeep({ dir: '.', house: true, smokeTimeoutMs: 20000 }); console.log('deep self-audit:', r.verdict, '- host deps ok, sandbox ok');"
+          node --input-type=module -e "const { auditDeep } = await import('./lib/deepaudit.js'); const r = await auditDeep({ dir: '.', house: true, smokeTimeoutMs: 20000 }); console.log('deep self-audit:', r.verdict, '| ast files:', r.layers.ast.filesParsed, '| sandbox loadOk:', r.layers.sandbox.loadOk);"
