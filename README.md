@@ -139,6 +139,8 @@ npm run typecheck
 - 新增审查项：在 `src/checks.ts`（浅层）或 `src/deepaudit.ts`（深度三层）中加规则，样式与既有 `Finding { id, severity, message }` 一致
 - 新增工具：在 `src/index.ts` 用 `ctx.tools.register(defineTool({...}))` 注册，输出经 `toJson` 归一化
 - 行为沙箱探针是运行时生成的 `.cjs` 模板（`src/deepaudit.ts` 内 `PROBE` 常量），修改后无需额外构建步骤
+- 本地校验：`npm run typecheck`（完整类型检查，需 DSH 宿主提供 peer 类型）；`npm run check:syntax`（esbuild 语法/打包校验，公共环境可用）
+- CI（GitHub Actions）：esbuild 语法/打包校验 + 入口 apply 验证 + auditDeep 自审冒烟；因 `@deepseek-ai/*` peer 链在公共 registry 不完整，用 peer stub 方案在公共环境跑通
 
 ## 已知边界
 

@@ -5,6 +5,12 @@
 
 ## [Unreleased]
 
+### 新增
+
+- GitHub Actions CI 上线（syntax + build + entry 验证 + auditDeep 自审冒烟），
+  通过 esbuild 语法/打包校验 + peer stub 方案在公共环境跑通（完整 tsc 类型检查需 DSH 宿主提供 peer 类型）
+- `.npmrc`（auto-install-peers=false）、`esbuild` devDependency、`check:syntax` 脚本
+
 ## [0.2.0] — 2026-08-16
 
 ### 新增
