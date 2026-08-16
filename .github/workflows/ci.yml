@@ -14,21 +14,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11.9.0
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Install direct deps (no peer auto-install)
-        run: pnpm install --ignore-scripts
+      - name: Install direct + dev deps (peers skipped: DSH runtime provided)
+        run: npm install --omit=peer --ignore-scripts --no-audit --no-fund
 
       - name: esbuild bundle check (externalizes DSH peer deps)
         run: |
-          pnpm exec esbuild src/index.ts --bundle --format=esm --platform=node \
+          npx esbuild src/index.ts --bundle --format=esm --platform=node \
             --external:node:* --external:@deepseek-ai/* --external:cordis --external:schemastery \
+            --external:acorn --external:acorn-walk \
             --outfile=/tmp/auditor-bundle-check.mjs
           echo "bundle check OK"
 
@@ -39,20 +36,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11.9.0
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Install direct deps (no peer auto-install)
-        run: pnpm install --ignore-scripts
+      - name: Install direct + dev deps (peers skipped: DSH runtime provided)
+        run: npm install --omit=peer --ignore-scripts --no-audit --no-fund
 
       - name: Compile src to lib (esbuild, types elided)
         run: |
-          pnpm exec esbuild src/index.ts --bundle --format=esm --platform=node \
+          npx esbuild src/index.ts --bundle --format=esm --platform=node \
             --external:node:* --external:@deepseek-ai/* --external:cordis --external:schemastery \
             --external:acorn --external:acorn-walk \
             --outfile=lib/index.js
