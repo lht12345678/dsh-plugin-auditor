@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install direct + dev deps (peers skipped: DSH runtime provided)
+      - name: Install direct and dev deps (peers skipped, DSH runtime provided)
         run: npm install --omit=peer --ignore-scripts --no-audit --no-fund
 
       - name: esbuild bundle check (externalizes DSH peer deps)
@@ -40,7 +40,7 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install direct + dev deps (peers skipped: DSH runtime provided)
+      - name: Install direct and dev deps (peers skipped, DSH runtime provided)
         run: npm install --omit=peer --ignore-scripts --no-audit --no-fund
 
       - name: Compile src to lib (esbuild, types elided)
